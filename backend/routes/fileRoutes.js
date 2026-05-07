@@ -32,7 +32,7 @@ router.post("/upload", auth, upload.array("files"), async (req, res) => {
 
     for (const file of req.files) {
       const filePath = `uploads/${file.filename}`;
-      const fullFileUrl = `http://localhost:5000/${filePath}`;
+      const fullFileUrl = `https://mana-panchayat.onrender.com/${filePath}`;
 
       const qrFileName = `qr-${Date.now()}-${file.filename}.png`;
       const qrPath = `uploads/${qrFileName}`;
