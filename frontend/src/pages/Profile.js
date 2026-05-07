@@ -59,7 +59,7 @@ export default function Profile() {
           <img
             src={
               user.profilePic
-                ? `http://localhost:5000/${user.profilePic}`
+                ? `https://mana-panchayat.onrender.com/${user.profilePic}`
                 : "https://i.pravatar.cc/100"
             }
             className="w-20 h-20 rounded-full"

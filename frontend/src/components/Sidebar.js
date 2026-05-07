@@ -48,7 +48,7 @@ export default function Sidebar() {
         <img
           src={
             user?.profilePic
-              ? `http://localhost:5000/${user.profilePic}`
+              ? `https://mana-panchayat.onrender.com/${user.profilePic}`
               : "https://i.pravatar.cc/100"
           }
           alt="profile"
