@@ -1,15 +1,7 @@
 import axios from "axios";
 
 const API = axios.create({
-  baseURL: "https://mana-panchayat.onrender.com",
-});
-
-API.interceptors.request.use((req) => {
-  const token = localStorage.getItem("token");
-  if (token) {
-    req.headers.Authorization = `Bearer ${token}`;
-  }
-  return req;
+  baseURL: "https://mana-panchayat.onrender.com/api",
 });
 
 export default API;
