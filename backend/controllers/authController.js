@@ -103,11 +103,19 @@ exports.login = async (req, res) => {
       }
     );
 
-    res.json({
-      message: "Login successful ✅",
-      token,
-      user,
-    });
+const safeUser = {
+  _id: user._id,
+  name: user.name,
+  email: user.email,
+  role: user.role,
+  profilePic: user.profilePic,
+};
+
+res.json({
+  message: "Login successful ✅",
+  token,
+  user: safeUser,
+});
 
   } catch (error) {
     console.error(error);
