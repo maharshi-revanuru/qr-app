@@ -29,113 +29,126 @@ export default function Home() {
     <div className="bg-gray-50 min-h-screen">
 
       {/* ================= NAVBAR ================= */}
-      <div className="sticky top-0 z-50 bg-white/90 backdrop-blur border-b border-gray-100">
+{/* ================= NAVBAR ================= */}
+<div className="sticky top-0 z-50 bg-white/90 backdrop-blur border-b border-gray-100">
 
-        <div className="flex justify-between items-center px-6 md:px-10 py-4 max-w-7xl mx-auto">
+  <div className="flex flex-col md:flex-row md:justify-between md:items-center gap-4 px-4 md:px-10 py-4 max-w-7xl mx-auto">
 
-          {/* LOGO SECTION */}
-          <Link
-            to="/"
-            className="flex items-center gap-3"
-          >
-            <img
-              src={logo}
-              alt="Mana Panchayat Logo"
-              className="w-12 h-12 object-contain"
-            />
+    {/* LOGO SECTION */}
+    <Link
+      to="/"
+      className="flex items-center justify-center md:justify-start gap-3"
+    >
 
-            <div>
-              <h1 className="text-2xl font-bold text-indigo-600">
-                Mana Panchayat
-              </h1>
+      <div className="w-14 h-14 md:w-16 md:h-16 overflow-hidden flex items-center justify-center">
 
-              <p className="text-xs text-gray-500">
-                Smart QR Sharing
-              </p>
-            </div>
-          </Link>
+        <img
+          src={logo}
+          alt="Mana Panchayat Logo"
+          className="w-full h-full object-contain scale-150"
+        />
 
-          {/* RIGHT SIDE */}
-          {!user ? (
-            <div className="flex items-center gap-3">
+      </div>
 
-              <Link
-                to="/login"
-                className="px-5 py-2 rounded-xl border border-indigo-200 text-indigo-600 hover:bg-indigo-50 transition"
-              >
-                Login
-              </Link>
+      <div>
 
-              <Link
-                to="/register"
-                className="px-5 py-2 rounded-xl bg-indigo-600 text-white hover:bg-indigo-700 shadow-md transition"
-              >
-                Get Started
-              </Link>
+        <h1 className="text-2xl md:text-3xl font-bold text-indigo-600 leading-none">
+          Mana Panchayat
+        </h1>
 
-            </div>
-          ) : (
-            <div className="relative">
+        <p className="text-xs md:text-sm text-gray-500 mt-1">
+          Smart QR Sharing
+        </p>
 
-              <div
-                onClick={() => setOpen(!open)}
-                className="flex items-center gap-3 cursor-pointer bg-white hover:bg-gray-100 px-3 py-2 rounded-xl transition"
-              >
-                <img
-                  src="https://i.pravatar.cc/40"
-                  alt="profile"
-                  className="w-10 h-10 rounded-full border"
-                />
+      </div>
 
-                <div className="hidden md:block">
-                  <p className="font-medium text-gray-700">
-                    {user.name}
-                  </p>
+    </Link>
 
-                  <p className="text-xs text-gray-400">
-                    Welcome back
-                  </p>
-                </div>
+    {/* RIGHT SIDE */}
+    {!user ? (
+      <div className="flex items-center justify-center md:justify-end gap-3 flex-wrap">
 
-                <ChevronDown size={16} />
-              </div>
+        <Link
+          to="/login"
+          className="px-4 md:px-5 py-2 rounded-xl border border-indigo-200 text-indigo-600 hover:bg-indigo-50 transition text-sm md:text-base"
+        >
+          Login
+        </Link>
 
-              {/* DROPDOWN */}
-              {open && (
-                <div className="absolute right-0 mt-3 w-56 bg-white rounded-2xl shadow-2xl border border-gray-100 p-2">
+        <Link
+          to="/register"
+          className="px-4 md:px-5 py-2 rounded-xl bg-indigo-600 text-white hover:bg-indigo-700 shadow-md transition text-sm md:text-base"
+        >
+          Get Started
+        </Link>
 
-                  <button
-                    onClick={() => navigate("/dashboard")}
-                    className="w-full text-left px-4 py-3 hover:bg-gray-100 rounded-xl transition"
-                  >
-                    Dashboard
-                  </button>
+      </div>
+    ) : (
+      <div className="relative flex justify-center md:justify-end">
 
-                  <button
-                    onClick={() => navigate("/upload")}
-                    className="w-full text-left px-4 py-3 hover:bg-gray-100 rounded-xl transition"
-                  >
-                    Upload Files
-                  </button>
+        <div
+          onClick={() => setOpen(!open)}
+          className="flex items-center gap-3 cursor-pointer bg-white hover:bg-gray-100 px-3 py-2 rounded-xl transition"
+        >
 
-                  <hr className="my-2" />
+          <img
+            src="https://i.pravatar.cc/40"
+            alt="profile"
+            className="w-10 h-10 rounded-full border"
+          />
 
-                  <button
-                    onClick={logout}
-                    className="w-full text-left px-4 py-3 text-red-500 hover:bg-red-50 rounded-xl transition"
-                  >
-                    Logout
-                  </button>
+          <div className="hidden md:block">
 
-                </div>
-              )}
+            <p className="font-medium text-gray-700">
+              {user.name}
+            </p>
 
-            </div>
-          )}
+            <p className="text-xs text-gray-400">
+              Welcome back
+            </p>
+
+          </div>
+
+          <ChevronDown size={16} />
 
         </div>
 
+        {/* DROPDOWN */}
+        {open && (
+          <div className="absolute right-0 top-14 w-56 bg-white rounded-2xl shadow-2xl border border-gray-100 p-2 z-50">
+
+            <button
+              onClick={() => navigate("/dashboard")}
+              className="w-full text-left px-4 py-3 hover:bg-gray-100 rounded-xl transition"
+            >
+              Dashboard
+            </button>
+
+            <button
+              onClick={() => navigate("/upload")}
+              className="w-full text-left px-4 py-3 hover:bg-gray-100 rounded-xl transition"
+            >
+              Upload Files
+            </button>
+
+            <hr className="my-2" />
+
+            <button
+              onClick={logout}
+              className="w-full text-left px-4 py-3 text-red-500 hover:bg-red-50 rounded-xl transition"
+            >
+              Logout
+            </button>
+
+          </div>
+        )}
+
       </div>
+    )}
+
+  </div>
+
+</div>
 
       {/* ================= HERO ================= */}
       <div className="bg-gradient-to-r from-purple-100 via-indigo-100 to-blue-100 py-24 text-center px-4">
