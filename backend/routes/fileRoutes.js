@@ -20,7 +20,7 @@ const storage = multer.diskStorage({
 const upload = multer({ storage });
 
 // ================= UPLOAD (MULTI FILE + LOCATION) =================
-router.post("/upload", auth, upload.array("files"), async (req, res) => {
+rrouter.post("/upload", auth, upload.any(), async (req, res) => {
   try {
     const { lat, lng } = req.body;
 
