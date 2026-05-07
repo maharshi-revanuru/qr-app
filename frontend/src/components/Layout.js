@@ -16,7 +16,7 @@ export default function Layout({ children, title = "Dashboard" }) {
   // ================= FETCH NOTIFICATIONS =================
   const fetchNotifications = async () => {
     try {
-      const res = await fetch("http://localhost:5000/api/notifications", {
+      const res = await fetch("https://mana-panchayat.onrender.com/api/notifications", {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
@@ -33,7 +33,7 @@ export default function Layout({ children, title = "Dashboard" }) {
   useEffect(() => {
     fetchNotifications();
 
-    const socket = io("http://localhost:5000");
+    const socket = io("https://mana-panchayat.onrender.com");
 
     socket.emit("join", user._id);
 
@@ -124,7 +124,7 @@ export default function Layout({ children, title = "Dashboard" }) {
                         key={n._id}
                         onClick={async () => {
                           await fetch(
-                            `http://localhost:5000/api/notifications/${n._id}/read`,
+                            `https://mana-panchayat.onrender.com/api/notifications/${n._id}/read`,
                             {
                               method: "PUT",
                               headers: {
@@ -167,7 +167,7 @@ export default function Layout({ children, title = "Dashboard" }) {
                 <img
                   src={
                     user?.profilePic
-                      ? `http://localhost:5000/${user.profilePic}`
+                      ? `https://mana-panchayat.onrender.com/${user.profilePic}`
                       : "https://i.pravatar.cc/40"
                   }
                   className="w-8 h-8 rounded-full"
