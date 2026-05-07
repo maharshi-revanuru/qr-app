@@ -174,8 +174,8 @@ export default function Dashboard() {
                 {filteredFiles.map((file) => {
 
                   const fileLink = file.customSlug
-                    ? `http://localhost:5000/f/${file.customSlug}`
-                    : `http://localhost:5000/${file.fileUrl}`;
+  ? `https://mana-panchayat.onrender.com/f/${file.customSlug}`
+  : `https://mana-panchayat.onrender.com/${file.fileUrl}`;
 
                   const share = shareData[file._id] || {};
 
@@ -202,7 +202,7 @@ export default function Dashboard() {
                       <div className="flex justify-center mb-4">
                         {file.qrCode ? (
                           <img
-                            src={`http://localhost:5000/${file.qrCode}`}
+                            src={`https://mana-panchayat.onrender.com/${file.qrCode}`}
                             className="w-28 h-28"
                             alt="qr"
                           />
