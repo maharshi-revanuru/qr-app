@@ -26,136 +26,135 @@ export default function Home() {
   };
 
   return (
-    <div className="bg-gray-50 min-h-screen">
+    <div className="bg-gray-50 min-h-screen overflow-x-hidden">
 
       {/* ================= NAVBAR ================= */}
-{/* ================= NAVBAR ================= */}
-<div className="sticky top-0 z-50 bg-white/90 backdrop-blur border-b border-gray-100">
+      <div className="sticky top-0 z-50 bg-white/90 backdrop-blur border-b border-gray-100 shadow-sm">
 
-  <div className="flex flex-col md:flex-row md:justify-between md:items-center gap-4 px-4 md:px-10 py-4 max-w-7xl mx-auto">
+        <div className="flex flex-col md:flex-row md:justify-between md:items-center gap-4 px-4 md:px-10 py-4 max-w-7xl mx-auto">
 
-    {/* LOGO SECTION */}
-    <Link
-      to="/"
-      className="flex items-center justify-center md:justify-start gap-3"
-    >
+          {/* LOGO */}
+          <Link
+            to="/"
+            className="flex items-center justify-center md:justify-start gap-3"
+          >
 
-      <div className="w-14 h-14 md:w-16 md:h-16 overflow-hidden flex items-center justify-center">
+            <div className="w-14 h-14 md:w-16 md:h-16 overflow-hidden flex items-center justify-center rounded-xl">
 
-        <img
-          src={logo}
-          alt="Mana Panchayat Logo"
-          className="w-full h-full object-contain scale-150"
-        />
+              <img
+                src={logo}
+                alt="Mana Panchayat Logo"
+                className="w-full h-full object-contain scale-150"
+              />
 
-      </div>
+            </div>
 
-      <div>
+            <div>
 
-        <h1 className="text-2xl md:text-3xl font-bold text-indigo-600 leading-none">
-          Mana Panchayat
-        </h1>
+              <h1 className="text-2xl md:text-3xl font-extrabold text-indigo-600 leading-none">
+                Mana Panchayat
+              </h1>
 
-        <p className="text-xs md:text-sm text-gray-500 mt-1">
-          Smart QR Sharing
-        </p>
+              <p className="text-xs md:text-sm text-gray-500 mt-1">
+                Smart QR Sharing
+              </p>
 
-      </div>
+            </div>
 
-    </Link>
+          </Link>
 
-    {/* RIGHT SIDE */}
-    {!user ? (
-      <div className="flex items-center justify-center md:justify-end gap-3 flex-wrap">
+          {/* RIGHT SIDE */}
+          {!user ? (
+            <div className="flex items-center justify-center md:justify-end gap-3 flex-wrap">
 
-        <Link
-          to="/login"
-          className="px-4 md:px-5 py-2 rounded-xl border border-indigo-200 text-indigo-600 hover:bg-indigo-50 transition text-sm md:text-base"
-        >
-          Login
-        </Link>
+              <Link
+                to="/login"
+                className="px-4 md:px-5 py-2 rounded-xl border border-indigo-200 text-indigo-600 hover:bg-indigo-50 transition text-sm md:text-base font-medium"
+              >
+                Login
+              </Link>
 
-        <Link
-          to="/register"
-          className="px-4 md:px-5 py-2 rounded-xl bg-indigo-600 text-white hover:bg-indigo-700 shadow-md transition text-sm md:text-base"
-        >
-          Get Started
-        </Link>
+              <Link
+                to="/register"
+                className="px-4 md:px-5 py-2 rounded-xl bg-indigo-600 text-white hover:bg-indigo-700 shadow-md transition text-sm md:text-base font-medium"
+              >
+                Get Started
+              </Link>
 
-      </div>
-    ) : (
-      <div className="relative flex justify-center md:justify-end">
+            </div>
+          ) : (
+            <div className="relative flex justify-center md:justify-end">
 
-        <div
-          onClick={() => setOpen(!open)}
-          className="flex items-center gap-3 cursor-pointer bg-white hover:bg-gray-100 px-3 py-2 rounded-xl transition"
-        >
+              <div
+                onClick={() => setOpen(!open)}
+                className="flex items-center gap-3 cursor-pointer bg-white hover:bg-gray-100 px-3 py-2 rounded-xl transition"
+              >
 
-          <img
-            src="https://i.pravatar.cc/40"
-            alt="profile"
-            className="w-10 h-10 rounded-full border"
-          />
+                <img
+                  src="https://i.pravatar.cc/40"
+                  alt="profile"
+                  className="w-10 h-10 rounded-full border"
+                />
 
-          <div className="hidden md:block">
+                <div className="hidden md:block">
 
-            <p className="font-medium text-gray-700">
-              {user.name}
-            </p>
+                  <p className="font-medium text-gray-700">
+                    {user.name}
+                  </p>
 
-            <p className="text-xs text-gray-400">
-              Welcome back
-            </p>
+                  <p className="text-xs text-gray-400">
+                    Welcome back
+                  </p>
 
-          </div>
+                </div>
 
-          <ChevronDown size={16} />
+                <ChevronDown size={16} />
+
+              </div>
+
+              {/* DROPDOWN */}
+              {open && (
+                <div className="absolute right-0 top-14 w-56 bg-white rounded-2xl shadow-2xl border border-gray-100 p-2 z-50">
+
+                  <button
+                    onClick={() => navigate("/dashboard")}
+                    className="w-full text-left px-4 py-3 hover:bg-gray-100 rounded-xl transition"
+                  >
+                    Dashboard
+                  </button>
+
+                  <button
+                    onClick={() => navigate("/upload")}
+                    className="w-full text-left px-4 py-3 hover:bg-gray-100 rounded-xl transition"
+                  >
+                    Upload Files
+                  </button>
+
+                  <hr className="my-2" />
+
+                  <button
+                    onClick={logout}
+                    className="w-full text-left px-4 py-3 text-red-500 hover:bg-red-50 rounded-xl transition"
+                  >
+                    Logout
+                  </button>
+
+                </div>
+              )}
+
+            </div>
+          )}
 
         </div>
 
-        {/* DROPDOWN */}
-        {open && (
-          <div className="absolute right-0 top-14 w-56 bg-white rounded-2xl shadow-2xl border border-gray-100 p-2 z-50">
-
-            <button
-              onClick={() => navigate("/dashboard")}
-              className="w-full text-left px-4 py-3 hover:bg-gray-100 rounded-xl transition"
-            >
-              Dashboard
-            </button>
-
-            <button
-              onClick={() => navigate("/upload")}
-              className="w-full text-left px-4 py-3 hover:bg-gray-100 rounded-xl transition"
-            >
-              Upload Files
-            </button>
-
-            <hr className="my-2" />
-
-            <button
-              onClick={logout}
-              className="w-full text-left px-4 py-3 text-red-500 hover:bg-red-50 rounded-xl transition"
-            >
-              Logout
-            </button>
-
-          </div>
-        )}
-
       </div>
-    )}
-
-  </div>
-
-</div>
 
       {/* ================= HERO ================= */}
-      <div className="bg-gradient-to-r from-purple-100 via-indigo-100 to-blue-100 py-24 text-center px-4">
+      <div className="bg-gradient-to-r from-purple-100 via-indigo-100 to-blue-100 py-20 md:py-28 text-center px-4">
 
         <div className="max-w-5xl mx-auto">
 
-          <h1 className="text-4xl md:text-6xl font-extrabold text-gray-800 leading-tight">
+          <h1 className="text-4xl sm:text-5xl md:text-6xl font-extrabold text-gray-800 leading-tight">
 
             Create & Share <br />
 
@@ -164,15 +163,16 @@ export default function Home() {
             </span>
 
             {" "}in Seconds
+
           </h1>
 
-          <p className="mt-6 text-gray-600 text-lg max-w-2xl mx-auto">
+          <p className="mt-6 text-gray-600 text-base md:text-lg max-w-2xl mx-auto leading-relaxed">
             Upload files, generate QR codes, and share links instantly with anyone.
             Simple, fast, and built for everyone.
           </p>
 
           {/* CTA BUTTONS */}
-          <div className="mt-8 flex flex-wrap justify-center gap-4">
+          <div className="mt-8 flex flex-col sm:flex-row justify-center gap-4">
 
             <Link
               to="/register"
@@ -193,7 +193,7 @@ export default function Home() {
         </div>
 
         {/* QR TYPE GRID */}
-        <div className="mt-16 grid grid-cols-2 md:grid-cols-4 gap-6 max-w-5xl mx-auto px-6">
+        <div className="mt-16 grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6 max-w-5xl mx-auto px-2 md:px-6">
 
           {[
             "URL / Link",
@@ -207,11 +207,13 @@ export default function Home() {
           ].map((item, i) => (
             <div
               key={i}
-              className="bg-white p-6 rounded-3xl shadow-md hover:shadow-2xl hover:-translate-y-1 cursor-pointer transition duration-300"
+              className="bg-white p-5 md:p-6 rounded-3xl shadow-md hover:shadow-2xl hover:-translate-y-1 cursor-pointer transition duration-300"
             >
-              <p className="font-semibold text-gray-700">
+
+              <p className="font-semibold text-gray-700 text-sm md:text-base">
                 {item}
               </p>
+
             </div>
           ))}
 
@@ -220,15 +222,16 @@ export default function Home() {
       </div>
 
       {/* ================= 3 STEPS ================= */}
-      <div className="py-24 px-6 md:px-10 text-center">
+      <div className="py-20 md:py-24 px-4 md:px-10 text-center">
 
-        <h2 className="text-4xl font-bold mb-14 text-gray-800">
+        <h2 className="text-3xl md:text-4xl font-bold mb-14 text-gray-800">
           Create QR Code in 3 Easy Steps
         </h2>
 
         <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
 
-          <div className="bg-white p-10 rounded-3xl shadow-md hover:shadow-xl transition">
+          {/* STEP 1 */}
+          <div className="bg-white p-8 md:p-10 rounded-3xl shadow-md hover:shadow-xl transition">
 
             <div className="w-14 h-14 bg-indigo-100 text-indigo-600 rounded-2xl flex items-center justify-center mx-auto mb-5 text-xl font-bold">
               1
@@ -248,7 +251,8 @@ export default function Home() {
 
           </div>
 
-          <div className="bg-white p-10 rounded-3xl shadow-md hover:shadow-xl transition">
+          {/* STEP 2 */}
+          <div className="bg-white p-8 md:p-10 rounded-3xl shadow-md hover:shadow-xl transition">
 
             <div className="w-14 h-14 bg-purple-100 text-purple-600 rounded-2xl flex items-center justify-center mx-auto mb-5 text-xl font-bold">
               2
@@ -268,7 +272,8 @@ export default function Home() {
 
           </div>
 
-          <div className="bg-white p-10 rounded-3xl shadow-md hover:shadow-xl transition">
+          {/* STEP 3 */}
+          <div className="bg-white p-8 md:p-10 rounded-3xl shadow-md hover:shadow-xl transition">
 
             <div className="w-14 h-14 bg-blue-100 text-blue-600 rounded-2xl flex items-center justify-center mx-auto mb-5 text-xl font-bold">
               3
