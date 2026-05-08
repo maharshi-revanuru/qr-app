@@ -36,7 +36,18 @@ app.use(cors());
 app.use(express.json());
 
 // STATIC FILES
-app.use("/uploads", express.static("uploads"));
+const fs = require("fs");
+
+const uploadsPath = path.join(__dirname, "uploads");
+
+if (!fs.existsSync(uploadsPath)) {
+  fs.mkdirSync(uploadsPath, { recursive: true });
+}
+
+app.use(
+  "/uploads",
+  express.static(path.join(__dirname, "uploads"))
+);
 
 // ================= 🔥 CUSTOM URL (IMPORTANT) =================
 app.get("/f/:slug", async (req, res) => {
