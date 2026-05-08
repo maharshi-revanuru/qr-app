@@ -200,16 +200,18 @@ export default function Dashboard() {
 
                       {/* QR */}
                       <div className="flex justify-center mb-4">
-                        {file.qrCode ? (
-                          <img
-                            src={`https://mana-panchayat.onrender.com/${file.qrCode}`}
-                            className="w-28 h-28"
-                            alt="qr"
-                          />
-                        ) : (
-                          <p className="text-gray-400 text-xs">No QR</p>
-                        )}
-                      </div>
+  {file.qrCode ? (
+    <img
+      src={`https://mana-panchayat.onrender.com/${file.qrCode}`}
+      className="w-28 h-28 object-contain"
+      alt="qr"
+    />
+  ) : (
+    <p className="text-gray-400 text-xs">
+      No QR Available
+    </p>
+  )}
+</div>
 
                       {/* LINK */}
                       <div className="flex items-center gap-2 bg-gray-100 p-2 rounded mb-4">
