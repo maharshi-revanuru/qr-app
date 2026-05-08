@@ -22,7 +22,7 @@ export default function Home() {
     localStorage.clear();
     setOpen(false);
 
-    window.location.href = "/";
+    navigate("/");
   };
 
   return (

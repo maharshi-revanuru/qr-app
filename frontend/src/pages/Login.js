@@ -1,8 +1,11 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import API from "../services/api";
 
 export default function Login() {
+
+  const navigate = useNavigate();
+
   const [form, setForm] = useState({
     email: "",
     password: "",
@@ -11,6 +14,7 @@ export default function Login() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
+  // ================= LOGIN =================
   const handleLogin = async (e) => {
     e.preventDefault();
 
@@ -20,17 +24,27 @@ export default function Login() {
     try {
       const res = await API.post("/auth/login", form);
 
-      // ✅ Save token + user
-      localStorage.setItem("token", res.data.token);
-      localStorage.setItem("user", JSON.stringify(res.data.user));
+      // ✅ SAVE TOKEN + USER
+      localStorage.setItem(
+        "token",
+        res.data.token
+      );
 
-      // ✅ Redirect to home
-      window.location.href = "/";
+      localStorage.setItem(
+        "user",
+        JSON.stringify(res.data.user)
+      );
+
+      // ✅ GO TO DASHBOARD
+      navigate("/dashboard");
 
     } catch (err) {
+
       setError(
-        err.response?.data?.message || "Invalid email or password"
+        err.response?.data?.message ||
+        "Invalid email or password"
       );
+
     } finally {
       setLoading(false);
     }
@@ -102,7 +116,10 @@ export default function Login() {
               placeholder="Enter your email"
               className="w-full p-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400 outline-none transition"
               onChange={(e) =>
-                setForm({ ...form, email: e.target.value })
+                setForm({
+                  ...form,
+                  email: e.target.value,
+                })
               }
               required
             />
@@ -121,7 +138,10 @@ export default function Login() {
               placeholder="Enter your password"
               className="w-full p-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400 outline-none transition"
               onChange={(e) =>
-                setForm({ ...form, password: e.target.value })
+                setForm({
+                  ...form,
+                  password: e.target.value,
+                })
               }
               required
             />
