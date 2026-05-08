@@ -10,6 +10,7 @@ import AdminDashboard from "./pages/AdminDashboard";
 import Users from "./pages/Users";
 import Profile from "./pages/Profile"
 import Verify from "./pages/Verify";
+import { Navigate } from "react-router-dom";
 
 function App() {
   return (
@@ -24,6 +25,7 @@ function App() {
       <Route path="/users" element={<Users />} />
       <Route path="/profile" element={<Profile />} />
       <Route path="/verify/:token" element={<Verify />} />
+      <Route path="*" element={<Navigate to="/" />} />
     </Routes>
   );
 }

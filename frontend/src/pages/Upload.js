@@ -1,4 +1,6 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+
 import Layout from "../components/Layout";
 import API from "../services/api";
 
@@ -10,6 +12,7 @@ import {
 } from "react-leaflet";
 
 function LocationPicker({ setLocation }) {
+
   useMapEvents({
     click(e) {
       setLocation({
@@ -23,19 +26,23 @@ function LocationPicker({ setLocation }) {
 }
 
 export default function Upload() {
+
+  const navigate = useNavigate();
+
   const [file, setFile] = useState(null);
   const [location, setLocation] = useState(null);
   const [loading, setLoading] = useState(false);
 
   // ================= UPLOAD =================
   const handleUpload = async () => {
+
     if (!file) {
       return alert("Please select a file");
     }
 
     const formData = new FormData();
 
-    // ✅ IMPORTANT — MUST MATCH BACKEND
+    // ✅ MUST MATCH BACKEND
     formData.append("files", file);
 
     // ✅ OPTIONAL LOCATION
@@ -45,14 +52,19 @@ export default function Upload() {
     }
 
     try {
+
       setLoading(true);
 
-      await API.post("/files/upload", formData, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-          "Content-Type": "multipart/form-data",
-        },
-      });
+      await API.post(
+        "/files/upload",
+        formData,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
 
       alert("Uploaded successfully ✅");
 
@@ -60,17 +72,22 @@ export default function Upload() {
       setFile(null);
       setLocation(null);
 
-      // OPTIONAL REFRESH
+      // ✅ REDIRECT TO DASHBOARD
       window.location.href = "/dashboard";
 
     } catch (err) {
+
       console.log(err);
 
       alert(
-        err.response?.data?.message || "Upload failed ❌"
+        err.response?.data?.message ||
+        "Upload failed ❌"
       );
+
     } finally {
+
       setLoading(false);
+
     }
   };
 
@@ -103,7 +120,9 @@ export default function Upload() {
 
             <input
               type="file"
-              onChange={(e) => setFile(e.target.files[0])}
+              onChange={(e) =>
+                setFile(e.target.files[0])
+              }
               className="w-full border border-gray-300 rounded-xl p-3"
             />
 
@@ -137,11 +156,16 @@ export default function Upload() {
                   url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                 />
 
-                <LocationPicker setLocation={setLocation} />
+                <LocationPicker
+                  setLocation={setLocation}
+                />
 
                 {location && (
                   <Marker
-                    position={[location.lat, location.lng]}
+                    position={[
+                      location.lat,
+                      location.lng,
+                    ]}
                   />
                 )}
 
@@ -151,11 +175,11 @@ export default function Upload() {
 
           </div>
 
-          {/* LOCATION DISPLAY */}
+          {/* LOCATION */}
           {location && (
             <div className="mb-6 bg-indigo-50 text-indigo-700 p-3 rounded-xl text-sm">
 
-              📍 Selected Location:
+              📍 Selected Location
               <br />
 
               Latitude: {location.lat}
@@ -172,7 +196,9 @@ export default function Upload() {
             disabled={loading}
             className="w-full bg-indigo-600 hover:bg-indigo-700 transition text-white py-3 rounded-2xl font-semibold shadow-md disabled:opacity-70"
           >
-            {loading ? "Uploading..." : "Upload File"}
+            {loading
+              ? "Uploading..."
+              : "Upload File"}
           </button>
 
         </div>
