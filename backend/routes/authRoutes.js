@@ -1,12 +1,20 @@
 const router = require("express").Router();
 
+const bcrypt = require("bcryptjs");
+const crypto = require("crypto");
+
+const User = require("../models/User");
+const sendEmail = require("../utils/sendEmail");
+
 const {
   register,
   login,
 } = require("../controllers/authController");
 
+// ================= REGISTER =================
 router.post("/register", register);
 
+// ================= LOGIN =================
 router.post("/login", login);
 
 // ================= FORGOT PASSWORD =================
@@ -24,7 +32,7 @@ router.post("/forgot-password", async (req, res) => {
       });
     }
 
-    // 🔥 TOKEN
+    // 🔥 GENERATE TOKEN
     const resetToken = crypto
       .randomBytes(32)
       .toString("hex");
@@ -47,7 +55,7 @@ router.post("/forgot-password", async (req, res) => {
       `
       <h2>Password Reset</h2>
 
-      <p>Click below to reset password:</p>
+      <p>Click below to reset your password:</p>
 
       <a href="${resetLink}">
         Reset Password
@@ -61,6 +69,8 @@ router.post("/forgot-password", async (req, res) => {
     });
 
   } catch (err) {
+
+    console.log(err);
 
     res.status(500).json({
       message: err.message,
@@ -92,7 +102,7 @@ router.post(
         });
       }
 
-      // 🔥 HASH NEW PASSWORD
+      // 🔥 HASH PASSWORD
       const hashed =
         await bcrypt.hash(
           req.body.password,
@@ -112,6 +122,8 @@ router.post(
       });
 
     } catch (err) {
+
+      console.log(err);
 
       res.status(500).json({
         message: err.message,
