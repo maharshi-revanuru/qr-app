@@ -169,7 +169,7 @@ export default function Dashboard() {
                 <span className="font-semibold">"{search}"</span>
               </div>
             ) : (
-              <div className="grid md:grid-cols-3 gap-6">
+              <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4">
 
                 {filteredFiles.map((file) => {
 
@@ -186,7 +186,7 @@ export default function Dashboard() {
                   return (
                     <div
                       key={file._id}
-                      className="bg-white p-5 rounded-xl shadow hover:shadow-lg transition"
+                      className="bg-white p-4 md:p-5 rounded-xl shadow hover:shadow-lg transition w-full overflow-hidden"
                     >
                       {/* NAME */}
                       <h3 className="font-semibold text-gray-800 truncate">
@@ -218,7 +218,7 @@ export default function Dashboard() {
                         <input
                           value={fileLink}
                           readOnly
-                          className="flex-1 bg-transparent text-xs outline-none"
+                          className="flex-1 bg-transparent text-xs outline-none truncate"
                         />
 
                         <button

@@ -11,6 +11,8 @@ import Users from "./pages/Users";
 import Profile from "./pages/Profile"
 import Verify from "./pages/Verify";
 import { Navigate } from "react-router-dom";
+import ForgotPassword from "./pages/ForgotPassword";
+import ResetPassword from "./pages/ResetPassword";
 
 function App() {
   return (
@@ -26,6 +28,8 @@ function App() {
       <Route path="/profile" element={<Profile />} />
       <Route path="/verify/:token" element={<Verify />} />
       <Route path="*" element={<Navigate to="/" />} />
+      <Route path="/forgot-password" element={<ForgotPassword />} />
+<Route path="/reset-password/:token" element={<ResetPassword />} />
     </Routes>
   );
 }
