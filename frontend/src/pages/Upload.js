@@ -12,6 +12,7 @@ import {
 
 import "leaflet/dist/leaflet.css";
 
+
 function LocationPicker({ setLocation }) {
   useMapEvents({
     click(e) {
@@ -202,6 +203,8 @@ export default function Upload() {
               <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
 
               <LocationPicker
+              console.log(place);
+console.log(lat, lng);
                 setLocation={setLocation}
               />
 
