@@ -1,4 +1,5 @@
 import { useState, useRef } from "react";
+import { useMap } from "react-leaflet";
 import Layout from "../components/Layout";
 import API from "../services/api";
 import axios from "axios";
@@ -7,6 +8,7 @@ import {
   MapContainer,
   TileLayer,
   Marker,
+  useMap,
   useMapEvents,
 } from "react-leaflet";
 
@@ -26,14 +28,23 @@ function LocationPicker({ setLocation }) {
   return null;
 }
 
-function MapController({ mapRef }) {
-  useMapEvents({
-    load(map) {
-      mapRef.current = map;
-    },
-  });
+function ChangeMap({ location }) {
+
+  const map = useMap();
+
+  useEffect(() => {
+
+    if (!location) return;
+
+    map.flyTo(
+      [location.lat, location.lng],
+      15
+    );
+
+  }, [location, map]);
 
   return null;
+
 }
 
 export default function Upload() {
@@ -78,9 +89,7 @@ export default function Upload() {
 
       setLocation({ lat, lng });
 
-      if (mapRef.current) {
-        mapRef.current.setView([lat, lng], 15);
-      }
+      
     } catch (err) {
       console.log(err);
       alert("Unable to search location");
@@ -196,19 +205,15 @@ export default function Upload() {
                 height: "300px",
                 width: "100%",
               }}
-              whenCreated={(map) => {
-                mapRef.current = map;
-              }}
+             
             >
               <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
 
               <LocationPicker
-              console.log(place);
-console.log(lat, lng);
                 setLocation={setLocation}
               />
 
-              <MapController mapRef={mapRef} />
+              <ChangeMap location={location} />
 
               {location && (
                 <Marker
@@ -249,4 +254,3 @@ console.log(lat, lng);
     </Layout>
   );
 }
-
