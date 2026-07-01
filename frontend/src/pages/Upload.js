@@ -1,15 +1,10 @@
-import { useState, useRef } from "react";
-import { useMap } from "react-leaflet";
+import { useState, useRef, useEffect } from "react";
 import Layout from "../components/Layout";
 import API from "../services/api";
 import axios from "axios";
 
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
-
-import markerIcon2x from "leaflet/dist/images/marker-icon-2x.png";
-import markerIcon from "leaflet/dist/images/marker-icon.png";
-import markerShadow from "leaflet/dist/images/marker-shadow.png";
 
 import {
   MapContainer,
@@ -19,30 +14,19 @@ import {
   useMapEvents,
 } from "react-leaflet";
 
-delete L.Icon.Default.prototype._getIconUrl;
-
-L.Icon.Default.mergeOptions({
-  iconRetinaUrl: markerIcon2x,
-  iconUrl: markerIcon,
-  shadowUrl: markerShadow,
-});
-
-const DefaultIcon = L.icon({
-  iconUrl:
-    "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png",
-
+const DefaultIcon = new L.Icon({
+  iconUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png",
   iconRetinaUrl:
     "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon-2x.png",
-
   shadowUrl:
     "https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png",
-
   iconSize: [25, 41],
   iconAnchor: [12, 41],
+  popupAnchor: [1, -34],
+  shadowSize: [41, 41],
 });
 
 L.Marker.prototype.options.icon = DefaultIcon;
-
 
 function LocationPicker({ setLocation }) {
   useMapEvents({
@@ -83,7 +67,6 @@ export default function Upload() {
 
   const [search, setSearch] = useState("");
 
-  const mapRef = useRef(null);
 
   const searchLocation = async () => {
     if (!search.trim()) {
