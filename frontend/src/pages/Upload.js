@@ -61,7 +61,7 @@ function ChangeMap({ location }) {
 }
 
 export default function Upload() {
-  const [file, setFile] = useState(null);
+  const [files, setFiles] = useState([]);
   const [location, setLocation] = useState(null);
   const [loading, setLoading] = useState(false);
 
@@ -109,13 +109,15 @@ export default function Upload() {
   };
 
   const handleUpload = async () => {
-    if (!file) {
+    if (files.length === 0) {
       return alert("Please select a file");
     }
 
     const formData = new FormData();
 
+    files.forEach((file) => {
     formData.append("files", file);
+});
 
     if (location) {
       formData.append("lat", location.lat);
@@ -134,7 +136,7 @@ export default function Upload() {
 
       alert("Uploaded successfully ✅");
 
-      setFile(null);
+      setFiles([]);
       setLocation(null);
       setSearch("");
 
@@ -170,18 +172,23 @@ export default function Upload() {
             </label>
 
             <input
-              type="file"
-              onChange={(e) =>
-                setFile(e.target.files[0])
-              }
-              className="w-full border rounded-xl p-3"
-            />
+  type="file"
+  multiple
+  onChange={(e) =>
+    setFiles(Array.from(e.target.files))
+  }
+  className="w-full border rounded-xl p-3"
+/>
 
-            {file && (
-              <p className="mt-2">
-                📄 {file.name}
-              </p>
-            )}
+            {files.length > 0 && (
+  <div className="mt-3">
+    {files.map((file, index) => (
+      <p key={index}>
+        📄 {file.name}
+      </p>
+    ))}
+  </div>
+)}
           </div>
 
           <div className="mb-4">
