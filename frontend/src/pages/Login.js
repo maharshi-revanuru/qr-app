@@ -1,11 +1,12 @@
 import { useState } from "react";
+import { Eye, EyeOff } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import API from "../services/api";
 
 export default function Login() {
 
   const navigate = useNavigate();
-
+  const [showPassword, setShowPassword] = useState(false);
   const [form, setForm] = useState({
     email: "",
     password: "",
@@ -127,26 +128,43 @@ export default function Login() {
           </div>
 
           {/* PASSWORD */}
-          <div className="mb-6">
+<div className="mb-6">
 
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              Password
-            </label>
+  <label className="block text-sm font-medium text-gray-700 mb-2">
+    Password
+  </label>
 
-            <input
-              type="password"
-              placeholder="Enter your password"
-              className="w-full p-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400 outline-none transition"
-              onChange={(e) =>
-                setForm({
-                  ...form,
-                  password: e.target.value,
-                })
-              }
-              required
-            />
+  <div className="relative">
 
-          </div>
+    <input
+      type={showPassword ? "text" : "password"}
+      placeholder="Enter your password"
+      className="w-full p-3 pr-12 border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400 outline-none transition"
+      value={form.password}
+      onChange={(e) =>
+        setForm({
+          ...form,
+          password: e.target.value,
+        })
+      }
+      required
+    />
+
+    <button
+      type="button"
+      onClick={() => setShowPassword(!showPassword)}
+      className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-indigo-600"
+    >
+      {showPassword ? (
+        <EyeOff size={20} />
+      ) : (
+        <Eye size={20} />
+      )}
+    </button>
+
+  </div>
+
+</div>
 
 <div className="text-right mb-6">
 
