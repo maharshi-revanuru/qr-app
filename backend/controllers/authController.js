@@ -79,6 +79,13 @@ exports.login = async (req, res) => {
       });
     }
 
+    // NEW: Check if account is disabled
+    if (!user.isActive) {
+      return res.status(403).json({
+        message: "Your account has been disabled. Please contact the administrator.",
+      });
+    }
+
     // CHECK PASSWORD
     const isMatch = await bcrypt.compare(
       password,
@@ -103,19 +110,20 @@ exports.login = async (req, res) => {
       }
     );
 
-const safeUser = {
-  _id: user._id,
-  name: user.name,
-  email: user.email,
-  role: user.role,
-  profilePic: user.profilePic,
-};
+    const safeUser = {
+      _id: user._id,
+      name: user.name,
+      email: user.email,
+      role: user.role,
+      profilePic: user.profilePic,
+      isActive: user.isActive,
+    };
 
-res.json({
-  message: "Login successful ✅",
-  token,
-  user: safeUser,
-});
+    res.json({
+      message: "Login successful ✅",
+      token,
+      user: safeUser,
+    });
 
   } catch (error) {
     console.error(error);
