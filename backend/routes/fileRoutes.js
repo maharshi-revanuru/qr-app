@@ -18,6 +18,11 @@ const upload = multer({
   storage: cloudinaryStorage,
 });
 
+upload.use = (req, res, next) => {
+  console.log("Multer reached");
+  next();
+};
+
 // Extract Cloudinary public_id from URL
 function getPublicId(url) {
   if (!url) return null;
