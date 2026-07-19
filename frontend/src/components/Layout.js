@@ -44,7 +44,7 @@ export default function Layout({
 
       const data = await res.json();
 
-      setNotifications(data);
+setNotifications(Array.isArray(data) ? data : []);
 
     } catch (err) {
       console.log(err);
@@ -101,9 +101,9 @@ export default function Layout({
   }, []);
 
   // ================= UNREAD =================
-  const unreadCount = notifications.filter(
-    (n) => !n.read
-  ).length;
+  const unreadCount = Array.isArray(notifications)
+  ? notifications.filter((n) => !n.read).length
+  : 0;
 
   // ================= TIME FORMAT =================
   const timeAgo = (date) => {
