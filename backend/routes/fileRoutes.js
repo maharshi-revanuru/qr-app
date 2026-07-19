@@ -1,24 +1,40 @@
 const express = require("express");
 const router = express.Router();
-const multer = require("multer");
-const path = require("path");
 const QRCode = require("qrcode");
-const fs = require("fs");
 
 const File = require("../models/File");
 const User = require("../models/User");
 const Notification = require("../models/Notification");
 const auth = require("../middleware/authMiddleware");
 
-// ================= MULTER =================
-const storage = multer.diskStorage({
-  destination: "uploads/",
-  filename: (req, file, cb) => {
-    cb(null, Date.now() + "-" + file.originalname);
-  },
-});
-const upload = multer({ storage });
+const multer = require("multer");
+const streamifier = require("streamifier");
 
+const cloudinary = require("../config/cloudinary");
+const cloudinaryStorage = require("../config/cloudinaryStorage");
+
+// ================= MULTER (Cloudinary) =================
+const upload = multer({
+  storage: cloudinaryStorage,
+});
+
+// Extract Cloudinary public_id from URL
+function getPublicId(url) {
+  if (!url) return null;
+
+  const parts = url.split("/");
+  const uploadIndex = parts.findIndex((p) => p === "upload");
+
+  if (uploadIndex === -1) return null;
+
+  // Remove version if present (e.g. v1751234567)
+  let publicPath = parts.slice(uploadIndex + 2).join("/");
+
+  // Remove extension
+  publicPath = publicPath.replace(/\.[^/.]+$/, "");
+
+  return publicPath;
+}
 // ================= UPLOAD (MULTI FILE + LOCATION) =================
 router.post("/upload", auth, upload.any(), async (req, res) => {
   try {
@@ -31,19 +47,30 @@ router.post("/upload", auth, upload.any(), async (req, res) => {
     const uploadedFiles = [];
 
     for (const file of req.files) {
-      const filePath = `uploads/${file.filename}`;
-      const BASE_URL =
-  process.env.BASE_URL ||
-  "https://mana-panchayat.onrender.com";
 
-const fullFileUrl = `${BASE_URL}/${filePath}`;
+      // Cloudinary file URL
+      const fileUrl = file.path;
 
-      const qrFileName = `qr-${Date.now()}-${file.filename}.png`;
-      const qrPath = `uploads/${qrFileName}`;
+      // Generate QR as buffer
+      const qrBuffer = await QRCode.toBuffer(fileUrl);
 
-      await QRCode.toFile(qrPath, fullFileUrl);
+      // Upload QR to Cloudinary
+      const qrUpload = await new Promise((resolve, reject) => {
+        const uploadStream = cloudinary.uploader.upload_stream(
+          {
+            folder: "mana-panchayat/qrcodes",
+            resource_type: "image",
+          },
+          (error, result) => {
+            if (error) return reject(error);
+            resolve(result);
+          }
+        );
 
-      // 🔥 SAFE SLUG
+        streamifier.createReadStream(qrBuffer).pipe(uploadStream);
+      });
+
+      // Safe slug
       const slug =
         file.originalname
           .split(".")[0]
@@ -53,14 +80,20 @@ const fullFileUrl = `${BASE_URL}/${filePath}`;
         Date.now();
 
       const newFile = await File.create({
-        filename: file.filename,
+        filename: file.originalname,
         originalName: file.originalname,
-        fileUrl: filePath,
-        qrCode: qrPath,
+        fileUrl: fileUrl,
+        qrCode: qrUpload.secure_url,
         uploadedBy: req.user.id,
         customSlug: slug,
         permissions: [],
-        location: lat && lng ? { lat, lng } : undefined, // 🔥 OPTIONAL
+        location:
+          lat && lng
+            ? {
+                lat: Number(lat),
+                lng: Number(lng),
+              }
+            : undefined,
       });
 
       uploadedFiles.push(newFile);
@@ -69,11 +102,12 @@ const fullFileUrl = `${BASE_URL}/${filePath}`;
     res.json(uploadedFiles);
 
   } catch (err) {
-    console.error("UPLOAD ERROR 👉", err);
-    res.status(500).json({ message: err.message });
+    console.error("UPLOAD ERROR:", err);
+    res.status(500).json({
+      message: err.message,
+    });
   }
 });
-
 // ================= UPDATE SLUG =================
 router.put("/:id/slug", auth, async (req, res) => {
   try {
@@ -191,29 +225,58 @@ router.put("/:id/permissions", auth, async (req, res) => {
 });
 
 // ================= DELETE =================
+// ================= DELETE =================
 router.delete("/:id", auth, async (req, res) => {
   try {
     const file = await File.findById(req.params.id);
+
+    if (!file) {
+      return res.status(404).json({
+        message: "File not found",
+      });
+    }
 
     if (
       file.uploadedBy.toString() !== req.user.id &&
       req.user.role !== "admin"
     ) {
-      return res.status(403).json({ message: "Not allowed" });
+      return res.status(403).json({
+        message: "Not allowed",
+      });
     }
 
-    const filePath = path.join(__dirname, "..", file.fileUrl);
-    if (fs.existsSync(filePath)) fs.unlinkSync(filePath);
+    // Delete uploaded file from Cloudinary
+const filePublicId = getPublicId(file.fileUrl);
 
-    const qrPath = path.join(__dirname, "..", file.qrCode);
-    if (fs.existsSync(qrPath)) fs.unlinkSync(qrPath);
+if (filePublicId) {
+  const isImage = /\.(jpg|jpeg|png|gif|webp)$/i.test(file.originalName);
+
+  await cloudinary.uploader.destroy(filePublicId, {
+    resource_type: isImage ? "image" : "raw",
+  });
+}
+
+    // Delete QR image from Cloudinary
+    const qrPublicId = getPublicId(file.qrCode);
+
+    if (qrPublicId) {
+      await cloudinary.uploader.destroy(qrPublicId, {
+        resource_type: "image",
+      });
+    }
 
     await file.deleteOne();
 
-    res.json({ message: "Deleted successfully" });
+    res.json({
+      message: "Deleted successfully",
+    });
 
   } catch (err) {
-    res.status(500).json({ message: err.message });
+    console.error(err);
+
+    res.status(500).json({
+      message: err.message,
+    });
   }
 });
 

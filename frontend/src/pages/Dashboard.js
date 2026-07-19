@@ -175,7 +175,7 @@ export default function Dashboard() {
 
                   const fileLink = file.customSlug
   ? `https://mana-panchayat.onrender.com/f/${file.customSlug}`
-  : `https://mana-panchayat.onrender.com/${file.fileUrl}`;
+  : file.fileUrl;
 
                   const share = shareData[file._id] || {};
 
@@ -202,10 +202,10 @@ export default function Dashboard() {
                       <div className="flex justify-center mb-4">
   {file.qrCode ? (
     <img
-      src={`https://mana-panchayat.onrender.com/${file.qrCode}`}
-      className="w-28 h-28 object-contain"
-      alt="qr"
-    />
+  src={file.qrCode}
+  className="w-28 h-28 object-contain"
+  alt="qr"
+/>
   ) : (
     <p className="text-gray-400 text-xs">
       No QR Available
