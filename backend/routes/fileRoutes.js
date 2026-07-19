@@ -38,6 +38,9 @@ function getPublicId(url) {
 // ================= UPLOAD (MULTI FILE + LOCATION) =================
 router.post("/upload", auth, upload.any(), async (req, res) => {
   try {
+    console.log("========== UPLOAD START ==========");
+console.log("FILES:", req.files);
+console.log("BODY:", req.body);
     const { lat, lng } = req.body;
 
     if (!req.files || req.files.length === 0) {
@@ -47,7 +50,10 @@ router.post("/upload", auth, upload.any(), async (req, res) => {
     const uploadedFiles = [];
 
     for (const file of req.files) {
-
+console.log("FILE OBJECT:", file);
+console.log("PATH:", file.path);
+console.log("URL:", file.url);
+console.log("FILENAME:", file.filename);
       // Cloudinary file URL
       const fileUrl = file.path;
 
@@ -102,11 +108,15 @@ router.post("/upload", auth, upload.any(), async (req, res) => {
     res.json(uploadedFiles);
 
   } catch (err) {
-    console.error("UPLOAD ERROR:", err);
-    res.status(500).json({
-      message: err.message,
-    });
-  }
+  console.error("========== UPLOAD ERROR ==========");
+  console.error(err);
+  console.error(err.stack);
+
+  return res.status(500).json({
+    message: err.message,
+    stack: err.stack,
+  });
+}
 });
 // ================= UPDATE SLUG =================
 router.put("/:id/slug", auth, async (req, res) => {
