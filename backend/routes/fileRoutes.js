@@ -11,25 +11,12 @@ const multer = require("multer");
 const streamifier = require("streamifier");
 
 const cloudinary = require("../config/cloudinary");
-const cloudinaryStorage = require("../config/cloudinaryStorage");
 
-router.post("/upload", auth, upload.any(), async (req, res) => {
 
-  console.log("🚀 UPLOAD ROUTE HIT");
-
-  return res.json({
-    success: true,
-    files: req.files,
-  });
-});
 // ================= MULTER (Cloudinary) =================
 const upload = multer({
   storage: multer.memoryStorage(),
 });
-upload.use = (req, res, next) => {
-  console.log("Multer reached");
-  next();
-};
 
 // Extract Cloudinary public_id from URL
 function getPublicId(url) {
@@ -49,7 +36,7 @@ function getPublicId(url) {
   return publicPath;
 }
 // ================= UPLOAD (MULTI FILE + LOCATION) =================
-router.post("/upload", auth, upload.any(), async (req, res) => {
+router.post("/upload", auth, upload.array("files"), async (req, res) => {
   console.log("🚀 UPLOAD ROUTE HIT");
   try {
     console.log("========== UPLOAD START ==========");
@@ -65,14 +52,29 @@ console.log("BODY:", req.body);
 
     for (const file of req.files) {
 console.log("FILE OBJECT:", file);
-console.log("PATH:", file.path);
-console.log("URL:", file.url);
-console.log("FILENAME:", file.filename);
-      // Cloudinary file URL
-      const fileUrl = file.path;
+console.log(file.originalname);
+console.log(file.mimetype);
+console.log(file.size);
+      // Upload file to Cloudinary
+const uploadResult = await new Promise((resolve, reject) => {
+  const uploadStream = cloudinary.uploader.upload_stream(
+    {
+      folder: "mana-panchayat/files",
+      resource_type: "auto",
+    },
+    (error, result) => {
+      if (error) return reject(error);
+      resolve(result);
+    }
+  );
 
-      // Generate QR as buffer
-      const qrBuffer = await QRCode.toBuffer(fileUrl);
+  streamifier.createReadStream(file.buffer).pipe(uploadStream);
+});
+
+const fileUrl = uploadResult.secure_url;
+
+// Generate QR as buffer
+const qrBuffer = await QRCode.toBuffer(fileUrl);
 
       // Upload QR to Cloudinary
       const qrUpload = await new Promise((resolve, reject) => {
