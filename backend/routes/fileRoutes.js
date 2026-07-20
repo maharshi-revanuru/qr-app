@@ -13,11 +13,19 @@ const streamifier = require("streamifier");
 const cloudinary = require("../config/cloudinary");
 const cloudinaryStorage = require("../config/cloudinaryStorage");
 
+router.post("/upload", auth, upload.any(), async (req, res) => {
+
+  console.log("🚀 UPLOAD ROUTE HIT");
+
+  return res.json({
+    success: true,
+    files: req.files,
+  });
+});
 // ================= MULTER (Cloudinary) =================
 const upload = multer({
-  storage: cloudinaryStorage,
+  storage: multer.memoryStorage(),
 });
-
 upload.use = (req, res, next) => {
   console.log("Multer reached");
   next();
