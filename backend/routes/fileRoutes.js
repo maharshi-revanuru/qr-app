@@ -42,6 +42,7 @@ function getPublicId(url) {
 }
 // ================= UPLOAD (MULTI FILE + LOCATION) =================
 router.post("/upload", auth, upload.any(), async (req, res) => {
+  console.log("🚀 UPLOAD ROUTE HIT");
   try {
     console.log("========== UPLOAD START ==========");
 console.log("FILES:", req.files);
