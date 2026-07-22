@@ -56,15 +56,15 @@ export default function Profile() {
 
         {/* PROFILE IMAGE */}
         <div className="flex items-center gap-4 mb-6">
-          <img
-            src={
-              user.profilePic
-                ? `https://mana-panchayat.onrender.com/${user.profilePic}`
-                : "https://i.pravatar.cc/100"
-            }
-            className="w-20 h-20 rounded-full"
-            alt="profile"
-          />
+         <img
+  src={
+    user.profilePic
+      ? user.profilePic
+      : "https://i.pravatar.cc/100"
+  }
+  className="w-20 h-20 rounded-full object-cover"
+  alt="profile"
+/>
 
           <input type="file" onChange={(e) => setFile(e.target.files[0])} />
         </div>

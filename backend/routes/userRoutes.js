@@ -13,14 +13,12 @@ const Request = require("../models/Request");
 const auth = require("../middleware/authMiddleware");
 
 // ================= MULTER (PROFILE PIC) =================
-const storage = multer.diskStorage({
-  destination: "uploads/",
-  filename: (req, file, cb) => {
-    cb(null, "profile-" + Date.now() + "-" + file.originalname);
-  },
-});
+const streamifier = require("streamifier");
+const cloudinary = require("../config/cloudinary");
 
-const upload = multer({ storage });
+const upload = multer({
+  storage: multer.memoryStorage(),
+});
 
 // ================= GET ALL USERS =================
 router.get("/", auth, async (req, res) => {
@@ -100,9 +98,30 @@ router.put(
       };
 
       if (req.file) {
-        updateData.profilePic =
-          `uploads/${req.file.filename}`;
+
+  const uploadResult = await new Promise((resolve, reject) => {
+
+    const uploadStream = cloudinary.uploader.upload_stream(
+      {
+        folder: "mana-panchayat/profile-pictures",
+        resource_type: "image",
+      },
+      (error, result) => {
+
+        if (error) return reject(error);
+
+        resolve(result);
       }
+    );
+
+    streamifier
+      .createReadStream(req.file.buffer)
+      .pipe(uploadStream);
+
+  });
+
+  updateData.profilePic = uploadResult.secure_url;
+}
 
       const user =
         await User.findByIdAndUpdate(

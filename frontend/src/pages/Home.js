@@ -10,13 +10,19 @@ export default function Home() {
 
   const navigate = useNavigate();
 
-  useEffect(() => {
+useEffect(() => {
+  try {
     const storedUser = localStorage.getItem("user");
 
     if (storedUser) {
       setUser(JSON.parse(storedUser));
     }
-  }, []);
+  } catch (err) {
+    console.error("Invalid user data in localStorage:", err);
+    localStorage.removeItem("user");
+    setUser(null);
+  }
+}, []);
 
   const logout = () => {
     localStorage.clear();
@@ -91,10 +97,10 @@ export default function Home() {
               >
 
                 <img
-                  src="https://i.pravatar.cc/40"
-                  alt="profile"
-                  className="w-10 h-10 rounded-full border"
-                />
+  src={user?.profilePic || "https://i.pravatar.cc/40"}
+  alt="profile"
+  className="w-10 h-10 rounded-full border"
+/>
 
                 <div className="hidden md:block">
 

@@ -65,13 +65,23 @@ exports.register = async (req, res) => {
   }
 };
 
+
 // ================= LOGIN =================
 exports.login = async (req, res) => {
   try {
     const { email, password } = req.body;
 
+    // DEBUG
+    console.log("=================================");
+    console.log("Login Attempt");
+    console.log("Email:", email);
+    console.log("Password Entered:", password);
+
     // FIND USER
     const user = await User.findOne({ email });
+
+    // DEBUG
+    console.log("User Found:", user);
 
     if (!user) {
       return res.status(400).json({
@@ -91,6 +101,10 @@ exports.login = async (req, res) => {
       password,
       user.password
     );
+
+    // DEBUG
+    console.log("Stored Password Hash:", user.password);
+    console.log("Password Match:", isMatch);
 
     if (!isMatch) {
       return res.status(400).json({

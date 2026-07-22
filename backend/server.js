@@ -58,7 +58,7 @@ app.get("/f/:slug", async (req, res) => {
       return res.status(404).send("Link not found");
     }
 
-    return res.sendFile(path.resolve(file.fileUrl));
+    return res.redirect(file.fileUrl);
 
   } catch (err) {
     res.status(500).send(err.message);

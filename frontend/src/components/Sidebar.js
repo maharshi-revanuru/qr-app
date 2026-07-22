@@ -84,14 +84,14 @@ export default function Sidebar() {
       <div className="p-4 md:p-5 border-b flex items-center gap-3">
 
         <img
-          src={
-            user?.profilePic
-              ? `https://mana-panchayat.onrender.com/${user.profilePic}`
-              : "https://i.pravatar.cc/100"
-          }
-          alt="profile"
-          className="w-10 h-10 rounded-full object-cover flex-shrink-0"
-        />
+  src={
+    user?.profilePic
+      ? user.profilePic
+      : "https://i.pravatar.cc/100"
+  }
+  alt="profile"
+  className="w-10 h-10 rounded-full object-cover flex-shrink-0"
+/>
 
         <div className="overflow-hidden">
 

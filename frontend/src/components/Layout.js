@@ -338,14 +338,14 @@ setNotifications(Array.isArray(data) ? data : []);
               >
 
                 <img
-                  src={
-                    user?.profilePic
-                      ? `https://mana-panchayat.onrender.com/${user.profilePic}`
-                      : "https://i.pravatar.cc/40"
-                  }
-                  className="w-8 h-8 rounded-full"
-                  alt="user"
-                />
+  src={
+    user?.profilePic
+      ? user.profilePic
+      : "https://i.pravatar.cc/40"
+  }
+  className="w-8 h-8 rounded-full object-cover"
+  alt="user"
+/>
 
                 <span
                   className="

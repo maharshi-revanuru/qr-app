@@ -1,19 +1,17 @@
 import axios from "axios";
 
 const API = axios.create({
-  baseURL: "https://mana-panchayat.onrender.com/api",
+  baseURL: process.env.REACT_APP_API_URL,
 });
 
-// 🔥 AUTO ATTACH TOKEN
-API.interceptors.request.use((req) => {
-
+API.interceptors.request.use((config) => {
   const token = localStorage.getItem("token");
 
   if (token) {
-    req.headers.Authorization = `Bearer ${token}`;
+    config.headers.Authorization = `Bearer ${token}`;
   }
 
-  return req;
+  return config;
 });
 
 export default API;

@@ -125,7 +125,7 @@ export default function Dashboard() {
 
         return (
           <>
-          {currentUser && !currentUser.isVerified && (
+          {/* {currentUser && !currentUser.isVerified && (
             <div className="bg-yellow-100 text-yellow-800 p-4 rounded mb-4 flex justify-between items-center">
               <span>⚠️ Please verify your email to unlock full access.</span>
 
@@ -136,7 +136,7 @@ export default function Dashboard() {
                 Resend
               </button>
             </div>
-          )}
+          )} */}
             {/* TABS */}
             <div className="flex gap-3 mb-6">
               <button
@@ -173,8 +173,11 @@ export default function Dashboard() {
 
                 {filteredFiles.map((file) => {
 
-                  const fileLink = file.customSlug
-  ? `https://mana-panchayat.onrender.com/f/${file.customSlug}`
+                  const BASE_URL =
+  process.env.REACT_APP_BASE_URL || "http://localhost:5000";
+
+const fileLink = file.customSlug
+  ? `${BASE_URL}/f/${file.customSlug}`
   : file.fileUrl;
 
                   const share = shareData[file._id] || {};
