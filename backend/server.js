@@ -3,6 +3,8 @@ const cors = require("cors");
 const dotenv = require("dotenv");
 const path = require("path");
 
+const cloudinary = require("./config/cloudinary");
+
 const connectDB = require("./config/db");
 const File = require("./models/File");
 
@@ -16,7 +18,7 @@ connectDB();
 const app = express();
 const server = http.createServer(app);
 
-// 🔥 SOCKET SETUP
+// ================= SOCKET =================
 const io = new Server(server, {
   cors: {
     origin: "*",
@@ -31,11 +33,11 @@ io.on("connection", (socket) => {
   });
 });
 
-// MIDDLEWARE
+// ================= MIDDLEWARE =================
 app.use(cors());
 app.use(express.json());
 
-// STATIC FILES
+// ================= STATIC FILES =================
 const fs = require("fs");
 
 const uploadsPath = path.join(__dirname, "uploads");
@@ -44,24 +46,60 @@ if (!fs.existsSync(uploadsPath)) {
   fs.mkdirSync(uploadsPath, { recursive: true });
 }
 
-app.use(
-  "/uploads",
-  express.static(path.join(__dirname, "uploads"))
-);
+app.use("/uploads", express.static(uploadsPath));
 
-// ================= 🔥 CUSTOM URL (IMPORTANT) =================
+// ================= CUSTOM SLUG ROUTE =================
 app.get("/f/:slug", async (req, res) => {
   try {
-    const file = await File.findOne({ customSlug: req.params.slug });
+    const file = await File.findOne({
+      customSlug: req.params.slug,
+    });
 
     if (!file) {
       return res.status(404).send("Link not found");
     }
 
-    return res.redirect(file.fileUrl);
+    // Backward compatibility for old uploaded files
+    if (!file.cloudinaryPublicId || !file.resourceType) {
+      return res.redirect(file.fileUrl);
+    }
+
+    let fileUrl;
+
+    // Images
+    if (file.resourceType === "image") {
+      fileUrl = cloudinary.url(file.cloudinaryPublicId, {
+        resource_type: "image",
+        secure: true,
+      });
+    }
+
+    // PDFs
+    else if (
+      file.resourceType === "image" &&
+      file.originalName.toLowerCase().endsWith(".pdf")
+    ) {
+      fileUrl = cloudinary.url(file.cloudinaryPublicId, {
+        resource_type: "image",
+        secure: true,
+        attachment: file.originalName,
+      });
+    }
+
+    // DOCX, XLSX, PPTX, ZIP, TXT, etc.
+    else {
+      fileUrl = cloudinary.url(file.cloudinaryPublicId, {
+        resource_type: "raw",
+        secure: true,
+        attachment: file.originalName,
+      });
+    }
+
+    return res.redirect(fileUrl);
 
   } catch (err) {
-    res.status(500).send(err.message);
+    console.error(err);
+    return res.status(500).send(err.message);
   }
 });
 
@@ -73,12 +111,12 @@ app.use("/api/requests", require("./routes/requestRoutes"));
 app.use("/api/admin", require("./routes/adminRoutes"));
 app.use("/api/notifications", require("./routes/notificationRoutes"));
 
-// TEST ROUTE
+// ================= HOME =================
 app.get("/", (req, res) => {
   res.send("QR File Manager API Running...");
 });
 
-// START SERVER
+// ================= SERVER =================
 const PORT = process.env.PORT || 5000;
 
 server.listen(PORT, () => {
