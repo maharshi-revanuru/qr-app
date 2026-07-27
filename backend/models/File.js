@@ -3,11 +3,15 @@ const mongoose = require("mongoose");
 const fileSchema = new mongoose.Schema(
   {
     filename: String,
-    originalName: String,
-    path: String,
-    qrCodeUrl: String,
-    qrCode: String,
-    fileUrl: String,
+originalName: String,
+path: String,
+qrCodeUrl: String,
+qrCode: String,
+fileUrl: String,
+
+// Cloudinary
+cloudinaryPublicId: String,
+resourceType: String,
 
     // 🔥 NEW FIELD (CUSTOM URL)
     customSlug: {

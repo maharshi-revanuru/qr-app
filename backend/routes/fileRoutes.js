@@ -102,21 +102,31 @@ const qrBuffer = await QRCode.toBuffer(fileUrl);
         Date.now();
 
       const newFile = await File.create({
-        filename: file.originalname,
-        originalName: file.originalname,
-        fileUrl: fileUrl,
-        qrCode: qrUpload.secure_url,
-        uploadedBy: req.user.id,
-        customSlug: slug,
-        permissions: [],
-        location:
-          lat && lng
-            ? {
-                lat: Number(lat),
-                lng: Number(lng),
-              }
-            : undefined,
-      });
+  filename: file.originalname,
+  originalName: file.originalname,
+
+  fileUrl: uploadResult.secure_url,
+
+  // NEW
+  cloudinaryPublicId: uploadResult.public_id,
+  resourceType: uploadResult.resource_type,
+
+  qrCode: qrUpload.secure_url,
+
+  uploadedBy: req.user.id,
+
+  customSlug: slug,
+
+  permissions: [],
+
+  location:
+    lat && lng
+      ? {
+          lat: Number(lat),
+          lng: Number(lng),
+        }
+      : undefined,
+});
 
       uploadedFiles.push(newFile);
     }
