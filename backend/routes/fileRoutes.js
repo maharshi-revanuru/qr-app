@@ -57,6 +57,7 @@ console.log(file.mimetype);
 console.log(file.size);
       // Upload file to Cloudinary
 const uploadResult = await new Promise((resolve, reject) => {
+  console.log("Cloudinary Upload Result:", uploadResult);
   const uploadStream = cloudinary.uploader.upload_stream(
     {
       folder: "mana-panchayat/files",
@@ -282,13 +283,9 @@ router.delete("/:id", auth, async (req, res) => {
     }
 
     // Delete uploaded file from Cloudinary
-const filePublicId = getPublicId(file.fileUrl);
-
-if (filePublicId) {
-  const isImage = /\.(jpg|jpeg|png|gif|webp)$/i.test(file.originalName);
-
-  await cloudinary.uploader.destroy(filePublicId, {
-    resource_type: isImage ? "image" : "raw",
+if (file.cloudinaryPublicId) {
+  await cloudinary.uploader.destroy(file.cloudinaryPublicId, {
+    resource_type: file.resourceType,
   });
 }
 
